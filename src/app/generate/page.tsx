@@ -33,8 +33,8 @@ export default function GeneratePage() {
       };
       mediaRecorder.start();
       setIsRecording(true);
-    } catch {
-      setError('Microphone access denied. Please allow microphone access.');
+    } catch (err) {
+      setError(`Microphone access denied: ${err instanceof Error ? err.message : 'Please allow microphone access.'}`);
     }
   }
 
@@ -54,8 +54,8 @@ export default function GeneratePage() {
       if (data.error) { setError(data.error); return ''; }
       setTranscribedText(data.text);
       return data.text as string;
-    } catch {
-      setError('Failed to transcribe audio. Please try again.');
+    } catch (err) {
+      setError(`Failed to transcribe audio: ${err instanceof Error ? err.message : 'Please try again.'}`);
       return '';
     } finally {
       setTranscribing(false);
