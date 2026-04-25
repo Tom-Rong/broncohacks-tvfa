@@ -44,7 +44,7 @@ Generate comprehensive notes that capture all important concepts, definitions, e
           content: prompt,
         },
       ],
-      max_tokens: 2000,
+      max_tokens: 4000,
     });
 
     const generatedContent = completion.choices[0].message.content || '';
