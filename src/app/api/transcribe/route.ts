@@ -11,6 +11,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No audio file provided' }, { status: 400 });
     }
 
+    const ALLOWED_TYPES = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/x-wav', 'audio/mp4', 'audio/m4a', 'audio/x-m4a', 'audio/webm', 'audio/ogg', 'audio/flac'];
+    const MAX_SIZE = 25 * 1024 * 1024; // 25MB
+
+    if (!ALLOWED_TYPES.includes(audioFile.type) && !audioFile.type.startsWith('audio/')) {
+      return NextResponse.json({ error: 'Invalid file type. Please upload an audio file.' }, { status: 400 });
+    }
+    if (audioFile.size > MAX_SIZE) {
+      return NextResponse.json({ error: 'File too large. Maximum size is 25MB.' }, { status: 400 });
+    }
+
     const transcription = await openai.audio.transcriptions.create({
       file: audioFile,
       model: 'whisper-1',

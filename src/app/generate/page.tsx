@@ -27,7 +27,8 @@ export default function GeneratePage() {
       chunksRef.current = [];
       mediaRecorder.ondataavailable = (e) => chunksRef.current.push(e.data);
       mediaRecorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+        const mimeType = mediaRecorder.mimeType || 'audio/webm';
+        const blob = new Blob(chunksRef.current, { type: mimeType });
         setRecordedBlob(blob);
         stream.getTracks().forEach(t => t.stop());
       };
@@ -48,7 +49,7 @@ export default function GeneratePage() {
     setError('');
     try {
       const formData = new FormData();
-      formData.append('audio', file instanceof File ? file : new File([file], filename, { type: 'audio/webm' }));
+      formData.append('audio', file instanceof File ? file : new File([file], filename, { type: file.type || 'audio/webm' }));
       const res = await fetch('/api/transcribe', { method: 'POST', body: formData });
       const data = await res.json();
       if (data.error) { setError(data.error); return ''; }

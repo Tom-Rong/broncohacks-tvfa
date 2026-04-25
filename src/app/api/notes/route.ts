@@ -10,11 +10,18 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
+  const { title, content } = body;
+  if (typeof title !== 'string' || !title.trim() || title.length > 500) {
+    return NextResponse.json({ error: 'Invalid title' }, { status: 400 });
+  }
+  if (typeof content !== 'string' || !content.trim() || content.length > 50000) {
+    return NextResponse.json({ error: 'Invalid content' }, { status: 400 });
+  }
   const notes = readJSON<UserNote[]>('user-notes.json', []);
   const newNote: UserNote = {
     id: uuidv4(),
-    title: body.title,
-    content: body.content,
+    title: title.trim(),
+    content: content.trim(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
