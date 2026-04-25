@@ -12,13 +12,13 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const { title, subject, description, content, uploadedBy } = body;
   if (typeof title !== 'string' || !title.trim() || title.length > 500) {
-    return NextResponse.json({ error: 'Invalid title' }, { status: 400 });
+    return NextResponse.json({ error: 'Title must be a non-empty string with maximum 500 characters' }, { status: 400 });
   }
   if (typeof subject !== 'string' || !subject.trim() || subject.length > 200) {
-    return NextResponse.json({ error: 'Invalid subject' }, { status: 400 });
+    return NextResponse.json({ error: 'Subject must be a non-empty string with maximum 200 characters' }, { status: 400 });
   }
   if (typeof content !== 'string' || !content.trim() || content.length > 200000) {
-    return NextResponse.json({ error: 'Invalid content' }, { status: 400 });
+    return NextResponse.json({ error: 'Content must be a non-empty string with maximum 200,000 characters' }, { status: 400 });
   }
   const lectures = readJSON<Lecture[]>('lectures.json', []);
   const newLecture: Lecture = {
